@@ -259,3 +259,22 @@ def test_flush(remove: MagicMock) -> None:
     assert glob_mock.called_once()
     assert mock_load_json.call_count == len(glob_result)
     remove.assert_called_once()
+
+
+def test_flush_func_and_arg(remove: MagicMock) -> None:
+    glob_result = ['1.cache_record.json', '2.cache_record.json']
+    glob_mock = MagicMock(return_value=glob_result)
+
+    mock_cache_records = [
+        {"func": "schedule_and_record", "args": [2024, "CHW"], 'expires': '2000-01-01', 'filename': 'df_cache.parquet'},
+        {"func": "schedule_and_record", "args": [2025, "CHW"],'expires': '3000-01-01', 'filename': 'df_cache2.parquet'},
+    ]
+    mock_load_json = MagicMock(side_effect=mock_cache_records)
+
+    with patch('glob.glob', glob_mock):
+        with patch('pybaseball.cache.file_utils.load_json', mock_load_json):
+            cache.flush_func_and_arg('schedule_and_record', 2025)
+
+    assert glob_mock.called_once()
+    assert mock_load_json.call_count == len(glob_result)
+    remove.assert_called_once()
