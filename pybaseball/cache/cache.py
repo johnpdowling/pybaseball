@@ -47,7 +47,7 @@ def flush_func_and_arg(func: str, arg: Any) -> None:
     record_files = glob.glob(os.path.join(config.cache_directory, '*.cache_record.json'))
     records = [cache_record.CacheRecord(filename) for filename in record_files]
     for record in records:
-        if record.func == func and arg in record.args:
+        if record.data['func'] == func and arg in record.data['args']:
             record.delete()
 
  # pylint: disable=invalid-name
