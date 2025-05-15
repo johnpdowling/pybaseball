@@ -42,7 +42,7 @@ def flush() -> None:
         if record.expired:
             record.delete()
 
-def flush_func_and_arg(func: str, arg: Any):
+def flush_func_and_arg(func: str, arg: Any) -> None:
     ''' Remove all records from the cache for a specific function and argument '''
     record_files = glob.glob(os.path.join(config.cache_directory, '*.cache_record.json'))
     records = [cache_record.CacheRecord(filename) for filename in record_files]
